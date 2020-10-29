@@ -14,16 +14,34 @@ export default function MortgageScreen() {
   const [loanAmount, setLoanAmount] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [amortizationPeriod, setAmortizationPeriod] = useState(25);
-  const [frequency, setFrequency] = useState("Monthly");
-
+  const [frequencyNum, setFrequencyNum] = useState(3);
+  const [frequencyLetter, setFrequencyLetter] = useState("Monthly");
+  const [result, setResult] = useState(1500);
+  const [totalInterest, setTotalInterest] = useState(0);
+  const calculatorHandler = () => {
+    let initialValue, interest, period, interestPow;
+    initialValue = parseFloat(loanAmount);
+    if (frequencyNum == 1) {
+      period = amortizationPeriod * 52;
+      interest = parseFloat(interestRate) / 52 / 100;
+      interestPow = Math.pow(interest + 1, period);
+      setResult(
+        parseInt(
+          Math.floor(initialValue * interestPow * interest) / (interestPow - 1)
+        )
+      );
+      setTotalInterest(result * period - initialValue);
+    }
+  };
   return (
     <TouchableWithoutFeedback
       onPress={() => {
         Keyboard.dismiss();
       }}
     >
-      <View style={styles.container}>
+      <View>
         <Text style={styles.header}>Mortgage Calculator</Text>
+
         <View style={styles.wrapper}>
           <View style={{ flex: 1 }}>
             <Text style={styles.text}>Loan Amount</Text>
@@ -35,7 +53,7 @@ export default function MortgageScreen() {
               placeholder="Amount"
               style={styles.textInput}
               onChangeText={(num) => {
-                setLoanAmount(parseFloat(num));
+                setLoanAmount(num);
               }}
             />
           </View>
@@ -48,10 +66,10 @@ export default function MortgageScreen() {
             <TextInput
               keyboardType="decimal-pad"
               value={interestRate}
-              placeholder="%/year"
+              placeholder="% / year"
               style={styles.textInput}
               onChangeText={(num) => {
-                setInterestRate(parseFloat(num));
+                setInterestRate(num);
               }}
             />
           </View>
@@ -62,16 +80,18 @@ export default function MortgageScreen() {
           </View>
           <View>
             <Slider
-              style={{ height: 30, width: 300, marginLeft: 20 }}
+              style={{
+                height: 30,
+                width: 300,
+                marginLeft: 20,
+              }}
               value={amortizationPeriod}
               minimumValue={5}
               maximumValue={30}
               onValueChange={(value) => setAmortizationPeriod(value)}
               step={5}
             />
-            <Text style={{ fontSize: 15, fontWeight: "bold", marginLeft: 300 }}>
-              {amortizationPeriod} years
-            </Text>
+            <Text style={styles.sliderText}>{amortizationPeriod} years</Text>
           </View>
         </View>
         <View>
@@ -81,38 +101,78 @@ export default function MortgageScreen() {
           <View>
             <Slider
               style={{ height: 30, width: 300, marginLeft: 20 }}
-              value={3}
+              value={frequencyNum}
               minimumValue={1}
               maximumValue={3}
               onValueChange={(value) => {
                 if (value === 1) {
-                  return setFrequency("Weekly");
+                  setFrequencyNum(value);
+                  setFrequencyLetter("Weekly");
+                  return;
                 } else if (value === 2) {
-                  return setFrequency("Biweekly");
+                  setFrequencyNum(value);
+                  setFrequencyLetter("Biweekly");
+                  return;
                 } else if (value === 3) {
-                  return setFrequency("Monthly");
+                  setFrequencyNum(value);
+                  setFrequencyLetter("Monthly");
+                  return;
                 }
               }}
               step={1}
             />
-            <Text style={{ fontSize: 15, fontWeight: "bold", marginLeft: 300 }}>
-              {frequency}
-            </Text>
+            <Text style={styles.sliderText}>{frequencyLetter}</Text>
           </View>
         </View>
-        <View style={{ flexDirection: "row", margin: 20, width: "100%" }}>
-          <Button title="Calculate" color="#fc4747"></Button>
+        <View
+          style={{
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "space-evenly",
+            flexDirection: "row",
+            marginTop: 20,
+          }}
+        >
+          <Button
+            title="Calculate"
+            color="#fc4747"
+            onPress={calculatorHandler}
+          ></Button>
           <Button
             title="Reset"
             onPress={() => {
               setLoanAmount("");
               setInterestRate("");
+              setAmortizationPeriod(25);
+              setFrequencyNum(3);
+              setFrequencyLetter("Monthly");
             }}
           ></Button>
         </View>
-        <Text>{loanAmount}</Text>
-        <Text>{interestRate}</Text>
-        <Text>{frequency}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-around",
+            marginTop: 20,
+            margin: 20,
+          }}
+        >
+          <Text style={{ flex: 1, fontStyle: "italic" }}>
+            {frequencyLetter} payment is
+          </Text>
+          <Text
+            style={{
+              fontSize: 35,
+              fontWeight: "bold",
+              backgroundColor: "#eaecee",
+              flex: 1.2,
+              textAlign: "center",
+              padding: 10,
+            }}
+          >
+            {result} $
+          </Text>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -121,16 +181,15 @@ export default function MortgageScreen() {
 const styles = StyleSheet.create({
   header: {
     paddingTop: 50,
-    padding: 30,
-    marginBottom: 30,
+    paddingBottom: 20,
+    marginBottom: 10,
     backgroundColor: "#fff",
-    fontSize: 30,
+    fontSize: 25,
+    fontWeight: "bold",
     textAlign: "center",
   },
-  container: {},
   wrapper: {
     flexDirection: "row",
-    marginBottom: 5,
   },
   textInput: {
     fontSize: 20,
@@ -141,13 +200,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     width: 100,
     flex: 1,
-    marginLeft: 20,
+    marginLeft: 10,
+    marginRight: 10,
   },
   text: {
-    // borderWidth: 1,
     fontWeight: "bold",
     fontSize: 17,
     padding: 10,
     margin: 5,
+  },
+  sliderText: {
+    fontSize: 15,
+    fontWeight: "bold",
+    textAlign: "right",
+    paddingRight: 15,
+    width: "100%",
   },
 });
