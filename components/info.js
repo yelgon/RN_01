@@ -11,7 +11,7 @@ export default function InfoScreen() {
       }}
     >
       <Image
-        source={require("../assets/home.png")}
+        source={require("../assets/logo.png")}
         style={{ height: 100, width: 100 }}
       />
 
