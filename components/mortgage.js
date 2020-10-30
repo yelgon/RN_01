@@ -7,20 +7,24 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Button,
+  ScrollView,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 
 export default function MortgageScreen() {
   const [loanAmount, setLoanAmount] = useState("");
+  const [initialValue, setInitialValue] = useState(0);
   const [interestRate, setInterestRate] = useState("");
   const [amortizationPeriod, setAmortizationPeriod] = useState(25);
   const [frequencyNum, setFrequencyNum] = useState(3);
   const [frequencyLetter, setFrequencyLetter] = useState("Monthly");
   const [result, setResult] = useState(1500);
+  const [totalPayment, setTotalPayment] = useState(0);
   const [totalInterest, setTotalInterest] = useState(0);
+
   const calculatorHandler = () => {
-    let initialValue, interest, period, interestPow;
-    initialValue = parseFloat(loanAmount);
+    let interest, period, interestPow;
+    setInitialValue(parseInt(loanAmount));
     if (frequencyNum == 1) {
       period = amortizationPeriod * 52;
       interest = parseFloat(interestRate) / 52 / 100;
@@ -30,7 +34,8 @@ export default function MortgageScreen() {
           Math.floor(initialValue * interestPow * interest) / (interestPow - 1)
         )
       );
-      setTotalInterest(result * period - initialValue);
+      setTotalPayment(result * period);
+      setTotalInterest(totalPayment - initialValue);
     }
   };
   return (
@@ -130,7 +135,7 @@ export default function MortgageScreen() {
             alignItems: "center",
             justifyContent: "space-evenly",
             flexDirection: "row",
-            marginTop: 20,
+            marginTop: 10,
           }}
         >
           <Button
@@ -153,8 +158,7 @@ export default function MortgageScreen() {
           style={{
             flexDirection: "row",
             justifyContent: "space-around",
-            marginTop: 20,
-            margin: 20,
+            margin: 10,
           }}
         >
           <Text style={{ flex: 1, fontStyle: "italic" }}>
@@ -162,7 +166,7 @@ export default function MortgageScreen() {
           </Text>
           <Text
             style={{
-              fontSize: 35,
+              fontSize: 30,
               fontWeight: "bold",
               backgroundColor: "#eaecee",
               flex: 1.2,
@@ -171,6 +175,15 @@ export default function MortgageScreen() {
             }}
           >
             {result} $
+          </Text>
+        </View>
+        <View style={{ padding: 10 }}>
+          <Text style={styles.resultText}>
+            The total amount you paid is {totalPayment}
+          </Text>
+          <Text style={styles.resultText}>
+            The total interest is {totalPayment} - {initialValue} ={" "}
+            {totalInterest}
           </Text>
         </View>
       </View>
@@ -182,7 +195,7 @@ const styles = StyleSheet.create({
   header: {
     paddingTop: 50,
     paddingBottom: 20,
-    marginBottom: 10,
+    marginBottom: 5,
     backgroundColor: "#fff",
     fontSize: 25,
     fontWeight: "bold",
@@ -207,7 +220,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 17,
     padding: 10,
-    margin: 5,
+    // margin: 5,
   },
   sliderText: {
     fontSize: 15,
@@ -215,5 +228,10 @@ const styles = StyleSheet.create({
     textAlign: "right",
     paddingRight: 15,
     width: "100%",
+  },
+  resultText: {
+    fontStyle: "italic",
+    fontSize: 15,
+    padding: 5,
   },
 });
