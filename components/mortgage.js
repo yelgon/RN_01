@@ -15,7 +15,8 @@ import MortgageResult from "./mortgageResult";
 
 export default function MortgageScreen() {
   const title = "Mortgage Calculator";
-  const [loanAmount, setLoanAmount] = useState("");
+  const [houseValue, setHouseValue] = useState("");
+  const [downpayment, setDownpayment] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [amortizationPeriod, setAmortizationPeriod] = useState(25);
   const [frequency, setFrequency] = useState(3);
@@ -32,25 +33,26 @@ export default function MortgageScreen() {
   };
 
   const handleCalculate = () => {
-    let interest, period;
-    if (loanAmount && interestRate) {
+    let interest, period, mortgageAmount;
+    if (houseValue && interestRate && downpayment) {
+      mortgageAmount = parseInt(houseValue) - parseInt(downpayment);
       if (frequency === 1) {
         period = amortizationPeriod * 52;
         interest = parseFloat(interestRate) / 52 / 100;
-        Calculate(parseInt(loanAmount), interest, period);
+        Calculate(mortgageAmount, interest, period);
         return;
       } else if (frequency === 2) {
         period = amortizationPeriod * 26;
         interest = parseFloat(interestRate) / 26 / 100;
-        Calculate(parseInt(loanAmount), interest, period);
+        Calculate(mortgageAmount, interest, period);
         return;
       } else if (frequency === 3) {
         period = amortizationPeriod * 12;
         interest = parseFloat(interestRate) / 12 / 100;
-        Calculate(parseInt(loanAmount), interest, period);
+        Calculate(mortgageAmount, interest, period);
         return;
       }
-    } else alert("Input numbers");
+    } else alert("Please Input Numbers");
   };
 
   return (
@@ -66,16 +68,32 @@ export default function MortgageScreen() {
           <View onStartShouldSetResponder={() => true}>
             <View style={styles.inputWrapper}>
               <View>
-                <Text style={styles.text}>Loan Amount</Text>
+                <Text style={styles.text}>House Value</Text>
               </View>
               <View style={styles.inputBox}>
                 <TextInput
                   keyboardType="decimal-pad"
-                  value={loanAmount}
+                  value={houseValue}
                   placeholder="$"
                   style={styles.textInput}
                   onChangeText={(num) => {
-                    setLoanAmount(num);
+                    setHouseValue(num);
+                  }}
+                />
+              </View>
+            </View>
+            <View style={styles.inputWrapper}>
+              <View>
+                <Text style={styles.text}>Down Payment</Text>
+              </View>
+              <View style={styles.inputBox}>
+                <TextInput
+                  keyboardType="decimal-pad"
+                  value={downpayment}
+                  placeholder="$downpayment"
+                  style={styles.textInput}
+                  onChangeText={(payment) => {
+                    setDownpayment(payment);
                   }}
                 />
               </View>
@@ -157,7 +175,8 @@ export default function MortgageScreen() {
               <Button
                 title="Reset"
                 onPress={() => {
-                  setLoanAmount("");
+                  setHouseValue("");
+                  setDownpayment("");
                   setInterestRate("");
                   setAmortizationPeriod(25);
                   setFrequency(3);

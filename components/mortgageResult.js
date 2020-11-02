@@ -1,11 +1,14 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 
 export default function MortgageRusult(props) {
-  console.log(props.money);
+  const [term, setTerm] = useState("");
+  useEffect(() => {
+    setTerm(props.money.paymentTerm);
+  }, [props.money.result]);
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.text}>{props.money.paymentTerm} payment is</Text>
+      <Text style={styles.text}>{term} payment is</Text>
       <Text style={styles.moneyText}> $ {props.money.result} </Text>
     </View>
   );
