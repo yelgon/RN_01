@@ -8,7 +8,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MortgageScreen from "./components/mortgage";
 import AnnuityScreen from "./components/annuity";
 import SavingsScreen from "./components/savings";
-import CompareScreen from "./components/compare";
 import InfoScreen from "./components/info";
 
 const Tab = createBottomTabNavigator();
@@ -22,8 +21,6 @@ const TabBarIcon = (focused, name) => {
     iconName = "chart-line";
   } else if (name === "Savings") {
     iconName = "currency-usd";
-  } else if (name === "Compare") {
-    iconName = "compare";
   }
   iconSize = focused ? 30 : 25;
   return (
@@ -51,7 +48,7 @@ export default function App() {
         <Tab.Screen name="Mortgage" component={MortgageScreen} />
         <Tab.Screen name="Annuity" component={AnnuityScreen} />
         <Tab.Screen name="Savings" component={SavingsScreen} />
-        <Tab.Screen name="Compare" component={CompareScreen} />
+
         <Tab.Screen name="Info" component={InfoScreen} />
       </Tab.Navigator>
     </NavigationContainer>

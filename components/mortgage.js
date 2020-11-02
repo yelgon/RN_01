@@ -2,88 +2,101 @@ import React, { useState } from "react";
 import {
   Text,
   View,
-  TextInput,
-  StyleSheet,
+  ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  StyleSheet,
+  TextInput,
   Button,
-  ScrollView,
 } from "react-native";
 import Slider from "@react-native-community/slider";
+import Header from "./header";
+import MortgageResult from "./mortgageResult";
 
 export default function MortgageScreen() {
+  const title = "Mortgage Calculator";
   const [loanAmount, setLoanAmount] = useState("");
-  const [initialValue, setInitialValue] = useState(0);
   const [interestRate, setInterestRate] = useState("");
   const [amortizationPeriod, setAmortizationPeriod] = useState(25);
-  const [frequencyNum, setFrequencyNum] = useState(3);
-  const [frequencyLetter, setFrequencyLetter] = useState("Monthly");
-  const [result, setResult] = useState(1500);
-  const [totalPayment, setTotalPayment] = useState(0);
-  const [totalInterest, setTotalInterest] = useState(0);
+  const [frequency, setFrequency] = useState(3);
+  const [paymentTerm, setPaymentTerm] = useState("Monthly");
+  const [result, setResult] = useState(0);
 
-  const calculatorHandler = () => {
-    let interest, period, interestPow;
-    setInitialValue(parseInt(loanAmount));
-    if (frequencyNum == 1) {
-      period = amortizationPeriod * 52;
-      interest = parseFloat(interestRate) / 52 / 100;
-      interestPow = Math.pow(interest + 1, period);
-      setResult(
-        parseInt(
-          Math.floor(initialValue * interestPow * interest) / (interestPow - 1)
-        )
-      );
-      setTotalPayment(result * period);
-      setTotalInterest(totalPayment - initialValue);
-    }
+  const Calculate = (initialVal, interest, period) => {
+    let interestPow = Math.pow(interest + 1, period);
+    let result =
+      Math.round(
+        ((initialVal * interestPow * interest) / (interestPow - 1)) * 100
+      ) / 100;
+    return setResult(result);
   };
+
+  const handleCalculate = () => {
+    let interest, period;
+    if (loanAmount && interestRate) {
+      if (frequency === 1) {
+        period = amortizationPeriod * 52;
+        interest = parseFloat(interestRate) / 52 / 100;
+        Calculate(parseInt(loanAmount), interest, period);
+        return;
+      } else if (frequency === 2) {
+        period = amortizationPeriod * 26;
+        interest = parseFloat(interestRate) / 26 / 100;
+        Calculate(parseInt(loanAmount), interest, period);
+        return;
+      } else if (frequency === 3) {
+        period = amortizationPeriod * 12;
+        interest = parseFloat(interestRate) / 12 / 100;
+        Calculate(parseInt(loanAmount), interest, period);
+        return;
+      }
+    } else alert("Input numbers");
+  };
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
         Keyboard.dismiss();
       }}
     >
-      <View>
-        <Text style={styles.header}>Mortgage Calculator</Text>
+      <View style={{ flex: 1 }}>
+        <Header header={title} />
 
-        <View style={styles.wrapper}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.text}>Loan Amount</Text>
-          </View>
-          <View style={styles.inputBox}>
-            <TextInput
-              keyboardType="decimal-pad"
-              value={loanAmount}
-              placeholder="Amount"
-              style={styles.textInput}
-              onChangeText={(num) => {
-                setLoanAmount(num);
-              }}
-            />
-          </View>
-        </View>
-        <View style={styles.wrapper}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.text}>Interest Rate</Text>
-          </View>
-          <View style={styles.inputBox}>
-            <TextInput
-              keyboardType="decimal-pad"
-              value={interestRate}
-              placeholder="% / year"
-              style={styles.textInput}
-              onChangeText={(num) => {
-                setInterestRate(num);
-              }}
-            />
-          </View>
-        </View>
-        <View>
-          <View>
+        <ScrollView>
+          <View onStartShouldSetResponder={() => true}>
+            <View style={styles.inputWrapper}>
+              <View>
+                <Text style={styles.text}>Loan Amount</Text>
+              </View>
+              <View style={styles.inputBox}>
+                <TextInput
+                  keyboardType="decimal-pad"
+                  value={loanAmount}
+                  placeholder="$"
+                  style={styles.textInput}
+                  onChangeText={(num) => {
+                    setLoanAmount(num);
+                  }}
+                />
+              </View>
+            </View>
+            <View style={styles.inputWrapper}>
+              <View>
+                <Text style={styles.text}>Interest Rate</Text>
+              </View>
+              <View style={styles.inputBox}>
+                <TextInput
+                  keyboardType="decimal-pad"
+                  value={interestRate}
+                  placeholder="% / year"
+                  style={styles.textInput}
+                  onChangeText={(rate) => {
+                    setInterestRate(rate);
+                  }}
+                />
+              </View>
+            </View>
             <Text style={styles.text}>Amortization Period</Text>
-          </View>
-          <View>
             <Slider
               style={{
                 height: 30,
@@ -97,141 +110,114 @@ export default function MortgageScreen() {
               step={5}
             />
             <Text style={styles.sliderText}>{amortizationPeriod} years</Text>
-          </View>
-        </View>
-        <View>
-          <View>
-            <Text style={styles.text}>Frequency</Text>
-          </View>
-          <View>
-            <Slider
-              style={{ height: 30, width: 300, marginLeft: 20 }}
-              value={frequencyNum}
-              minimumValue={1}
-              maximumValue={3}
-              onValueChange={(value) => {
-                if (value === 1) {
-                  setFrequencyNum(value);
-                  setFrequencyLetter("Weekly");
-                  return;
-                } else if (value === 2) {
-                  setFrequencyNum(value);
-                  setFrequencyLetter("Biweekly");
-                  return;
-                } else if (value === 3) {
-                  setFrequencyNum(value);
-                  setFrequencyLetter("Monthly");
-                  return;
-                }
+            <View>
+              <View>
+                <Text style={styles.text}>Frequency</Text>
+              </View>
+              <View>
+                <Slider
+                  style={{ height: 30, width: 300, marginLeft: 20 }}
+                  value={frequency}
+                  minimumValue={1}
+                  maximumValue={3}
+                  onValueChange={(value) => {
+                    if (value === 1) {
+                      setFrequency(value);
+                      setPaymentTerm("Weekly");
+                      return;
+                    }
+                    if (value === 2) {
+                      setFrequency(value);
+                      setPaymentTerm("Bi-weekly");
+                      return;
+                    }
+                    if (value === 3) {
+                      setFrequency(value);
+                      setPaymentTerm("Monthly");
+                      return;
+                    }
+                  }}
+                  step={1}
+                />
+                <Text style={styles.sliderText}>{paymentTerm}</Text>
+              </View>
+            </View>
+            <View
+              style={{
+                justifyContent: "space-evenly",
+                flexDirection: "row",
+                marginTop: 10,
               }}
-              step={1}
-            />
-            <Text style={styles.sliderText}>{frequencyLetter}</Text>
+            >
+              <Button
+                title="Calculate"
+                color="#fc4747"
+                onPress={handleCalculate}
+              ></Button>
+              <Button
+                title="Reset"
+                onPress={() => {
+                  setLoanAmount("");
+                  setInterestRate("");
+                  setAmortizationPeriod(25);
+                  setFrequency(3);
+                  setPaymentTerm("Monthly");
+                  setResult(0);
+                }}
+              ></Button>
+            </View>
+            <MortgageResult money={{ result, paymentTerm }} />
+            <Text style={{ fontSize: 25, marginTop: 30 }}>
+              Lorem Ipsum is simply dummy text of the printing and typesetting
+              industry. Lorem Ipsum has been the industry's standard dummy text
+              ever since the 1500s, when an unknown printer took a galley of
+              type and scrambled it to make a type specimen book. It has
+              survived not only five centuries, but also the leap into
+              electronic typesetting, remaining essentially unchanged. It was
+              popularised in the 1960s with the release of Letraset sheets
+              containing Lorem Ipsum passages, and more recently with desktop
+              publishing software like Aldus PageMaker including versions of
+              Lorem Ipsum. Why do we use it? It is a long established fact that
+              a reader will be distracted by the readable content of a page when
+              looking at its layout. The point of using Lorem Ipsum is that it
+              has a more-or-less normal distribution of letters, as opposed to
+              using 'Content here, content here', making it look like readable
+              English. Many desktop publishing packages and web page editors now
+              use Lorem Ipsum as their default model text, and a search for
+              'lorem ipsum' will uncover many web sites still in their infancy.
+              Various versions have evolved over the years, sometimes by
+              accident, sometimes on purpose (injected humour and the like).
+            </Text>
           </View>
-        </View>
-        <View
-          style={{
-            width: "100%",
-            alignItems: "center",
-            justifyContent: "space-evenly",
-            flexDirection: "row",
-            marginTop: 10,
-          }}
-        >
-          <Button
-            title="Calculate"
-            color="#fc4747"
-            onPress={calculatorHandler}
-          ></Button>
-          <Button
-            title="Reset"
-            onPress={() => {
-              setLoanAmount("");
-              setInterestRate("");
-              setAmortizationPeriod(25);
-              setFrequencyNum(3);
-              setFrequencyLetter("Monthly");
-            }}
-          ></Button>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            margin: 10,
-          }}
-        >
-          <Text style={{ flex: 1, fontStyle: "italic" }}>
-            {frequencyLetter} payment is
-          </Text>
-          <Text
-            style={{
-              fontSize: 30,
-              fontWeight: "bold",
-              backgroundColor: "#eaecee",
-              flex: 1.2,
-              textAlign: "center",
-              padding: 10,
-            }}
-          >
-            {result} $
-          </Text>
-        </View>
-        <View style={{ padding: 10 }}>
-          <Text style={styles.resultText}>
-            The total amount you paid is {totalPayment}
-          </Text>
-          <Text style={styles.resultText}>
-            The total interest is {totalPayment} - {initialValue} ={" "}
-            {totalInterest}
-          </Text>
-        </View>
+        </ScrollView>
       </View>
     </TouchableWithoutFeedback>
   );
 }
-
 const styles = StyleSheet.create({
-  header: {
-    paddingTop: 50,
-    paddingBottom: 20,
-    marginBottom: 5,
-    backgroundColor: "#fff",
-    fontSize: 25,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  wrapper: {
+  inputWrapper: {
     flexDirection: "row",
+  },
+  inputBox: {
+    borderBottomWidth: 2,
+    flex: 1,
+    margin: 10,
+  },
+  text: {
+    fontWeight: "bold",
+    fontSize: 15,
+    margin: 10,
   },
   textInput: {
     fontSize: 20,
     textAlign: "right",
-    padding: 10,
-  },
-  inputBox: {
-    borderBottomWidth: 2,
-    width: 100,
-    flex: 1,
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  text: {
-    fontWeight: "bold",
-    fontSize: 17,
-    padding: 10,
-    // margin: 5,
+    padding: 15,
   },
   sliderText: {
     fontSize: 15,
     fontWeight: "bold",
     textAlign: "right",
-    paddingRight: 15,
-    width: "100%",
-  },
-  resultText: {
-    fontStyle: "italic",
-    fontSize: 15,
-    padding: 5,
+    marginRight: 20,
+    marginTop: 5,
   },
 });
