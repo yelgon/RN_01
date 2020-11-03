@@ -16,14 +16,16 @@ export default function MortgageRusult(props) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginTop: 20,
+    marginTop: 30,
     flexDirection: "row",
     justifyContent: "space-around",
   },
   text: { fontSize: 15, marginLeft: 10, fontWeight: "bold" },
   moneyText: {
-    marginRight: 20,
+    padding: 10,
     fontSize: 25,
+    borderWidth: 1,
     fontWeight: "bold",
+    // color: "red",
   },
 });
