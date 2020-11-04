@@ -48,7 +48,6 @@ export default function App() {
         <Tab.Screen name="Mortgage" component={MortgageScreen} />
         <Tab.Screen name="Annuity" component={AnnuityScreen} />
         <Tab.Screen name="Savings" component={SavingsScreen} />
-
         <Tab.Screen name="Info" component={InfoScreen} />
       </Tab.Navigator>
     </NavigationContainer>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, StyleSheet } from "react-native";
 
 export default function InfoScreen() {
   return (
@@ -12,19 +12,24 @@ export default function InfoScreen() {
     >
       <Image
         source={require("../assets/logo.png")}
-        style={{ height: 100, width: 100 }}
+        style={{ height: 150, width: 150 }}
       />
 
       <Text
         style={{
           marginTop: 50,
           fontSize: 15,
-          fontWeight: "bold",
         }}
       >
         Calculated by mathematical theory
       </Text>
-      <Text>Designed by YANGOH KIM</Text>
+      <View style={{ marginTop: 100 }}>
+        <Text style={styles.text}>Designed by</Text>
+        <Text style={styles.text}>YANGOH KIM</Text>
+      </View>
     </View>
   );
 }
+const styles = StyleSheet.create({
+  text: { padding: 5, fontWeight: "bold" },
+});

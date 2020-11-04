@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 
-export default function MortgageRusult(props) {
+export default function AnnuityResult(props) {
   const [term, setTerm] = useState("");
   useEffect(() => {
     setTerm(props.money.paymentTerm);
   }, [props.money.result]);
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.text}>{term} payment is</Text>
+      <Text style={styles.text}>Your {term} income is</Text>
       <Text style={styles.moneyText}> $ {props.money.result} </Text>
     </View>
   );
@@ -16,14 +16,14 @@ export default function MortgageRusult(props) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginTop: 30,
-    flexDirection: "row",
-    justifyContent: "space-around",
+    margin: 30,
   },
-  text: { fontSize: 15, marginLeft: 10, fontWeight: "bold" },
+  text: { fontSize: 15, marginTop: 10, fontWeight: "bold" },
   moneyText: {
-    padding: 10,
+    padding: 5,
     fontSize: 25,
+    borderBottomWidth: 1,
     fontWeight: "bold",
+    textAlign: "right",
   },
 });
