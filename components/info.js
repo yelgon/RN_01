@@ -24,7 +24,7 @@ export default function InfoScreen() {
         Calculated by mathematical theory
       </Text>
       <View style={{ marginTop: 100 }}>
-        <Text style={styles.text}>Designed by</Text>
+        <Text style={styles.text}>Developed by</Text>
         <Text style={styles.text}>YANGOH KIM</Text>
       </View>
     </View>

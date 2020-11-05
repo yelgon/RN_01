@@ -205,6 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 15,
     margin: 10,
+    minWidth: 130,
   },
   textInput: {
     fontSize: 20,

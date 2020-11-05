@@ -8,7 +8,7 @@ export default function AnnuityResult(props) {
   }, [props.money.result]);
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.text}>Your {term} income is</Text>
+      <Text style={styles.text}>{term} income is</Text>
       <Text style={styles.moneyText}> $ {props.money.result} </Text>
     </View>
   );
@@ -16,14 +16,14 @@ export default function AnnuityResult(props) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    margin: 30,
+    marginTop: 30,
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
   text: { fontSize: 15, marginTop: 10, fontWeight: "bold" },
   moneyText: {
-    padding: 5,
+    padding: 10,
     fontSize: 25,
-    borderBottomWidth: 1,
     fontWeight: "bold",
-    textAlign: "right",
   },
 });
