@@ -14,13 +14,8 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "RN_01",
-      "buildNumber": "1.0.0"
-    },
     "android": {
-      "package": "com.yourcompany.yourappname",
+      "package": "yelgon.com",
       "versionCode": 1
     },
     "web": {
