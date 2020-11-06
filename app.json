@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Mortgage and Annuity calculator",
-    "slug": "rn_01",
+    "slug": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
@@ -15,8 +15,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "android": {
-      "package": "yelgon.com",
-      "versionCode": 2
+      "package": "com.yelgon.cal",
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
