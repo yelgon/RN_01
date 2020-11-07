@@ -16,7 +16,11 @@
     "assetBundlePatterns": ["**/*"],
     "android": {
       "package": "com.yelgon.cal",
-      "versionCode": 3
+      "versionCode": 4,
+      "permissions": ["default"]
+    },
+    "ios": {
+      "bundleIdentifier": "com.yelgon.cal"
     },
     "web": {
       "favicon": "./assets/favicon.png"
